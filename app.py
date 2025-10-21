@@ -6,6 +6,7 @@ from cluster import train_model, load_model, classify_jobs
 def run_job_pipeline():
     st.title("Karkidi Job Clustering App")
 
+    # Scrape jobs
     with st.spinner("Scraping jobs..."):
         jobs = scrape_karkidi_jobs()
     
@@ -17,12 +18,13 @@ def run_job_pipeline():
     st.info("Preprocessing skills...")
     skill_matrix, tfidf = preprocess_skills(jobs)
 
+    # Load or train model
     try:
-        model = load_model()
-        st.success("Loaded existing clustering model.")
+        model, tfidf = load_model()  # load both model and TF-IDF
+        st.success("Loaded existing clustering model and TF-IDF vectorizer.")
     except FileNotFoundError:
         st.warning("Model not found. Training a new one...")
-        model = train_model(skill_matrix)
+        model = train_model(skill_matrix, tfidf)  # pass tfidf to save it too
         st.success("Training complete and model saved.")
 
     # Classify jobs
