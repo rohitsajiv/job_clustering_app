@@ -16,9 +16,9 @@ def load_model():
     return joblib.load(MODEL_FILENAME)  # returns (model, tfidf)
 
 def classify_jobs(jobs_df, tfidf, model):
-    # Ensure column name matches exactly: 'Skills'
     skills = jobs_df['Skills'].tolist()
-    X_new = tfidf.transform(skills) 
+    X_new = tfidf.transform(skills)  
     clusters = model.predict(X_new)
     jobs_df['cluster'] = clusters
     return jobs_df
+
